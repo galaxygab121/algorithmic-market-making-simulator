@@ -99,7 +99,7 @@ def _make_order(parts: tuple[str, ...]) -> Order:
 
 def run_engine(cmds: list[str], engine: Path, workdir: Path, bench_reps: int = 0) -> str:
     path = workdir / "workload.txt"
-    path.write_text("\n".join(cmds) + "\n")
+    path.write_text("\n".join(cmds) + "\n", encoding="utf-8")
     args = [str(engine), str(path)]
     if bench_reps:
         args += ["--bench", str(bench_reps)]

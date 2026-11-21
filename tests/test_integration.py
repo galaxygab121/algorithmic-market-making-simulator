@@ -133,10 +133,10 @@ def test_export_artifacts(tmp_path: Path, small_cfg: SimulationConfig) -> None:
     res = run_comparison(small_cfg)
     out = export_artifacts(res, tmp_path / "runs", timestamp="20260101T000000Z")
     assert out.name == f"20260101T000000Z_seed{small_cfg.seed}"
-    manifest = json.loads((out / "manifest.json").read_text())
+    manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["simulated"] is True and manifest["seed"] == small_cfg.seed
     assert manifest["config"]["steps"] == small_cfg.steps
-    metrics = json.loads((out / "metrics.json").read_text())
+    metrics = json.loads((out / "metrics.json").read_text(encoding="utf-8"))
     assert set(metrics) == {"baseline", "inventory_aware"}
     for name in metrics:
         for kind in ("timeseries", "fills", "orders", "quotes", "depth"):
@@ -153,7 +153,7 @@ def test_charts_render_offline(tmp_path: Path, small_cfg: SimulationConfig) -> N
     for i, fig in enumerate(figs):
         assert len(fig.data) > 0
         p = save_html(fig, tmp_path / f"f{i}.html")
-        html = p.read_text()
+        html = p.read_text(encoding="utf-8")
         # plotly.js is embedded inline: no external <script src="http..."> needed
         assert re.search(r"<script[^>]+src=[\"']https?://", html) is None
         assert len(html) > 1_000_000
@@ -168,7 +168,7 @@ def test_cli_matches_engine(tmp_path: Path) -> None:
     assert main(["--config", str(cfg_path), "--seed", "5", "--steps", "300",
                  "--output", str(tmp_path)]) == 0
     run_dir = next(tmp_path.iterdir())
-    cli_metrics = json.loads((run_dir / "metrics.json").read_text())
+    cli_metrics = json.loads((run_dir / "metrics.json").read_text(encoding="utf-8"))
     cfg = load_config(cfg_path).with_overrides(steps=300)
     direct = run_comparison(cfg, seed=5)
     for name, run in direct.runs.items():

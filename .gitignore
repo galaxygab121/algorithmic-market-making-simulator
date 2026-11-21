@@ -30,3 +30,6 @@ build/
 .vscode/
 .idea/
 .streamlit/secrets.toml
+
+# Local agent instructions (not published)
+CLAUDE.md

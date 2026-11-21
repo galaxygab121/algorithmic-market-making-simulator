@@ -60,9 +60,9 @@ def export_artifacts(result: ComparisonResult, output: str | Path,
         "strategies": list(result.runs),
         "config": result.config.model_dump(mode="json"),
     }
-    (out / "manifest.json").write_text(json.dumps(_jsonable(manifest), indent=2))
+    (out / "manifest.json").write_text(json.dumps(_jsonable(manifest), indent=2), encoding="utf-8")
     metrics = {name: r.metrics for name, r in result.runs.items()}
-    (out / "metrics.json").write_text(json.dumps(_jsonable(metrics), indent=2))
+    (out / "metrics.json").write_text(json.dumps(_jsonable(metrics), indent=2), encoding="utf-8")
     result.metrics_table().to_csv(out / "comparison.csv")
     for name, r in result.runs.items():
         r.timeseries.to_csv(out / f"{name}_timeseries.csv", index=False)

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 
+import pytest
+
 from marketmaker.config import BaselineStrategyConfig, InventoryStrategyConfig
 from marketmaker.strategies import (
     FixedSpreadStrategy,
@@ -66,7 +68,7 @@ def test_spread_formula_and_bounds() -> None:
     s = InventoryAwareStrategy(cfg)
     _, half = s.reservation_and_half_spread(1000.0, 0, 3.0)
     expected = 0.1 * 9 * 1 + (2 / 0.1) * math.log(1 + 0.1 / 1.5)
-    assert half == expected / 2
+    assert half == pytest.approx(expected / 2)
     _, half_hi = s.reservation_and_half_spread(1000.0, 0, 1000.0)
     assert half_hi == 10.0  # capped at max_spread/2
     _, half_lo = s.reservation_and_half_spread(1000.0, 0, 0.0)
