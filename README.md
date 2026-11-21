@@ -20,7 +20,7 @@ the Python one exactly.
 ## One-minute demo
 
 ```bash
-git clone https://github.com/<you>/algorithmic-market-making-simulator.git
+git clone https://github.com/galaxygab121/algorithmic-market-making-simulator.git
 cd algorithmic-market-making-simulator
 uv sync                                    # installs the locked environment (Python 3.12)
 uv run python scripts/run_demo.py          # 3 scenarios -> runs/demo/... (CSV, JSON, HTML, PNG)
