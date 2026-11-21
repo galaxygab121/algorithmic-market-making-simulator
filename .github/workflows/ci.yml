@@ -29,3 +29,20 @@ jobs:
         run: uv run pytest
       - name: CLI demo smoke run
         run: uv run python -m marketmaker.simulation --config examples/inventory_stress.yaml --steps 1500 --output runs/ci
+
+  cpp:
+    name: C++ engine (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Configure & build (Release)
+        run: |
+          cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build cpp/build -j
+      - name: Catch2 unit tests
+        run: ctest --test-dir cpp/build --output-on-failure
+      - name: Python <-> C++ equivalence
+        run: |
+          uv sync --locked
+          uv run pytest tests/test_cpp_equivalence.py -v
