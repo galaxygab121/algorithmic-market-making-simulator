@@ -318,7 +318,7 @@ a text command stream through it. It is isolated and the simulator doesn't depen
 The Python package installs and runs without a compiler.
 
 * **Equivalence**: `tests/test_cpp_equivalence.py` replays 9 workloads (3 seeds × 3
-  regimes, about 15k commands each). Each workload is built from the synthetic stream plus
+  regimes, 2.5k–7.8k commands each). Each workload is built from the synthetic stream plus
   injected post-only crosses, duplicate IDs and self-trades. The Python and C++ outputs
   must be **byte-identical**: every trade ID, price, quantity, maker/taker ID, reject
   reason, STP cancel and cancel ack.
