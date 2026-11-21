@@ -1,0 +1,28 @@
+# Inventory stress / risk demo: a one-directional trend with heavy informed, imbalanced
+# taker flow. Passive quotes get run over, inventory builds, and a deliberately tight
+# drawdown limit trips the kill switch. All results are SIMULATED.
+name: inventory_stress
+seed: 11
+steps: 3000
+step_ms: 100
+market:
+  initial_price: 100.0
+  process: gbm
+  volatility: 0.0002
+  informed_fraction: 0.4
+  market_order_rate: 0.8
+  regimes:
+    - {regime: baseline, start_frac: 0.0, end_frac: 1.0}
+    - {regime: trend, start_frac: 0.3, end_frac: 1.0, drift_per_sec: -0.0006, flow_imbalance: -0.2}
+exchange:
+  contract_multiplier: 10
+  fees: {maker_fee_bps: -0.2, taker_fee_bps: 0.5}
+risk:
+  position_limit: 60
+  max_order_qty: 10
+  max_notional: 60000
+  max_drawdown: 25
+  flatten_on_kill: true
+strategies:
+  baseline: {quote_size: 5, max_inventory: 60, half_spread_ticks: 1}
+  inventory_aware: {quote_size: 5, max_inventory: 60, gamma: 0.01, horizon_sec: 10}

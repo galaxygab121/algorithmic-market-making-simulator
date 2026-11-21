@@ -1,0 +1,26 @@
+# Volatile market: low-liquidity open, a volatility spike mid-run, then baseline.
+# All results are SIMULATED.
+name: volatile_market
+seed: 7
+steps: 4000
+step_ms: 100
+market:
+  initial_price: 100.0
+  process: gbm
+  volatility: 0.0003
+  informed_fraction: 0.2
+  regimes:
+    - {regime: baseline, start_frac: 0.0, end_frac: 1.0}
+    - {regime: low_liquidity, start_frac: 0.0, end_frac: 0.25}
+    - {regime: volatility_spike, start_frac: 0.4, end_frac: 0.65}
+exchange:
+  contract_multiplier: 10
+  fees: {maker_fee_bps: -0.2, taker_fee_bps: 0.5}
+  order_latency_ms: 30
+  cancel_latency_ms: 30
+risk:
+  position_limit: 100
+  max_drawdown: 150
+strategies:
+  baseline: {quote_size: 5, max_inventory: 50, half_spread_ticks: 2}
+  inventory_aware: {quote_size: 5, max_inventory: 50, gamma: 0.01, horizon_sec: 10}

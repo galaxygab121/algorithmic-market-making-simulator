@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --locked --python ${{ matrix.python }}
+      - name: Ruff
+        run: uv run ruff check .
+      - name: mypy (core modules)
+        run: uv run mypy
+      - name: pytest
+        run: uv run pytest
+      - name: CLI demo smoke run
+        run: uv run python -m marketmaker.simulation --config examples/inventory_stress.yaml --steps 1500 --output runs/ci
